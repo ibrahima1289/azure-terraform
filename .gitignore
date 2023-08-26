@@ -1,0 +1,19 @@
+.DS_Store
+node_modules
+.tmp
+npm-debug.log
+.terraform.lock.hcl
+
+#Terraform State Files
+**/*.tfstate
+**/*.tfstate.backup
+**/*.tfstate.backup.d/*
+
+#Terraform plan output 
+tfplan
+
+#terraform variables
+**/terraform.tfvars
+
+#terraform init files 
+**/.terraform
