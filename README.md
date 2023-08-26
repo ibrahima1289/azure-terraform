@@ -27,7 +27,7 @@ Note: We will be using [Windows WSL](https://code.visualstudio.com/docs/remote/w
 
 * You should see this on your browser
 
-<img src="images/az6.PNG" width=38.5% height=30%>
+<img src="images/az6.PNG" width=80% height=80%>
 
 * Run command `az account show` to verify you are logged in
 
@@ -54,7 +54,7 @@ See `main.tf` file in this repo as an example.
 
 * You can see the resources (resource group, virtual network and subnet) have been created
 
-<img src="images/az11.PNG" width=60% height=60%>
+<img src="images/az11.PNG" width=90% height=90%>
 
 * To clean, run `terraform destroy`. Type `yes` when prompted to enter value.
 
