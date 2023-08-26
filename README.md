@@ -4,7 +4,7 @@ The objective of this repo is to set up the environment in order to deploy Azure
 ## Configure the environment
 ### Pre-requisites
 * Have an [Azure subscription](https://www.educative.io/answers/how-to-create-a-microsoft-azure-subscription)
-* Install [Terraform](https://developer.hashicorp.com/terraform/tutorials/azure-get-started/install-cli) and [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
+* Install [Terraform](https://developer.hashicorp.com/terraform/tutorials/azure-get-started/install-cli) and [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)<br>
 Note: We will be using [Windows WSL](https://code.visualstudio.com/docs/remote/wsl-tutorial) CLI in VS Code
 
 ### Authenticate to Azure using Microsoft Account
