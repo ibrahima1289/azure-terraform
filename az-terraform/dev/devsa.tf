@@ -43,7 +43,7 @@ resource "azurerm_storage_account" "dev-state-sa" {
 }
 
 # Create a Container for the State File
-resource "azurerm_storage_container" "tf-container" {  
+resource "azurerm_storage_container" "dev-container" {  
   name                          = "${lower(var.infra)}-tfstate"
   storage_account_name          = azurerm_storage_account.dev-state-sa.name
   depends_on                    = [azurerm_storage_account.dev-state-sa]

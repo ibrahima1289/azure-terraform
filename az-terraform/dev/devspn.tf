@@ -8,14 +8,14 @@ resource "azuread_service_principal" "spn_dev" {
 }
 
 # Create the Application
-resource "azuread_application" "app_dev" {
+resource "azuread_application" "spn_dev" {
   display_name = "app_dev"
   owners                       = [data.azuread_client_config.current.object_id]
 }
 
 # Assign role to the SPN
 resource "azurerm_role_assignment" "spn_dev" {
-  scope                        = "/subscriptions/xxx/" # Add the subscription id
+  scope                        = data.azurerm_subscription.current.id # Add the subscription id
   role_definition_name         = "Contributor" 
   principal_id                 = azuread_service_principal.spn_dev.object_id # SPN id
 }

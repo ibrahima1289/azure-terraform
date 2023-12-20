@@ -1,9 +1,9 @@
 ########################## Service Principal ##########################
 output "object_id" {
-  value       = azuread_service_principal.prod_spn.object_id
+  value       = azuread_service_principal.spn_prod.object_id
 }
 output "client_id" {
-  value       = azuread_application.prod_spn.application_id
+  value       = azuread_application.spn_prod.application_id
 }
 
 # output "sp-pass" {

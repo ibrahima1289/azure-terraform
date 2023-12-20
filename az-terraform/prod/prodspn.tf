@@ -8,7 +8,7 @@ resource "azuread_service_principal" "spn_prod" {
 }
 
 # Create the Application
-resource "azuread_application" "app_prod" {
+resource "azuread_application" "spn_prod" {
   display_name = "app_prod"
   owners                       = [data.azuread_client_config.current.object_id]
 }
