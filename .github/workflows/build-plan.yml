@@ -1,0 +1,186 @@
+name: Buid - Plan - Test
+on:
+    push:
+      branches: main
+    pull_request:
+      branches: main
+        
+permissions:
+    contents: read
+    pull-requests: write
+    
+env:
+    ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+    ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+    ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+    ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        env:
+            # Needed since terraform has read-only permissions
+            ARM_SKIP_PROVIDER_REGISTRATION: true
+        steps:
+          # Checkout main to GitHub Actions runner
+          - name: Checkout
+            uses: actions/checkout@v3
+            with:
+              ref: main
+          
+          # Displays checkout files in runner
+          - name: Display Folders
+            run: |
+              pwd
+              echo 'Backend folder'
+              ls -altr /home/runner/work/azure-terraform/az-terraform/backend
+              echo 'Dev folder'
+              ls -altr /home/runner/work/azure-terraform/az-terraform/dev
+              echo 'Prod folder'
+              ls -altr /home/runner/work/azure-terraform/az-terraform/prod
+    
+          # Install the latest version Terraform CLI
+          - name: Setup Terraform
+            uses: hashicorp/setup-terraform@v2
+            with:
+              terraform_wrapper: false
+    
+          # Backend
+          - name: Terraform Init - Backend
+            run: | 
+              cd /home/runner/work/azure-terraform/az-terraform/backend
+              terraform init -input=false
+
+          - name: Terraform Format Backend
+            run: terraform fmt -check
+            
+          - name: Terraform Validate Backend
+            run: terraform validate
+
+          # Dev
+          - name: Terraform Init - Dev
+            run: | 
+                cd /home/runner/work/azure-terraform/az-terraform/dev
+                terraform init -input=false
+      
+          - name: Terraform Format Dev
+            run: terraform fmt -check
+          
+          - name: Terraform Validate Dev
+            run: terraform validate
+
+          # Prod
+          - name: Terraform Init - Prod
+            run: | 
+              cd /home/runner/work/azure-terraform/az-terraform/prod
+              terraform init -input=false
+    
+          - name: Terraform Format Prod
+            run: terraform fmt -check
+            
+          - name: Terraform Validate Prod
+            run: terraform validate
+
+    # Backend TF Plan
+    terraform-plan-backend:
+        name: Backend Terraform Plan
+        runs-on: ubuntu-latest
+        needs: [build]
+        env:
+            ARM_SKIP_PROVIDER_REGISTRATION: true
+        
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v3
+            with:
+              ref: main
+
+          - name: Setup Terraform
+            uses: hashicorp/setup-terraform@v2
+            with:
+              terraform_wrapper: false
+
+          - name: Terraform Init - Backend
+            run: | 
+              cd /home/runner/work/azure-terraform/az-terraform/backend
+              terraform init -input=false
+
+          - name: Terraform Plan
+            run: |
+                cd /home/runner/work/azure-terraform/az-terraform/backend
+                terraform plan -out=backend-tfplan
+            continue-on-error: false
+
+    # Dev TF Plan
+    terraform-plan-dev:
+        name: Dev Terraform Plan
+        runs-on: ubuntu-latest
+        needs: [build]
+        env:
+            ARM_SKIP_PROVIDER_REGISTRATION: true
+        
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                ref: main
+        
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v2
+              with:
+                terraform_wrapper: false
+        
+            - name: Terraform Init - Dev
+              run: | 
+                cd /home/runner/work/azure-terraform/az-terraform/dev
+                terraform init -input=false
+        
+            - name: Terraform Plan
+              run: |
+                cd /home/runner/work/azure-terraform/az-terraform/dev
+                terraform plan -out=dev-tfplan
+              continue-on-error: false
+
+    # Prod TF Plan
+    terraform-plan-prod:
+        name: Prod Terraform Plan
+        runs-on: ubuntu-latest
+        needs: [build]
+        env:
+          ARM_SKIP_PROVIDER_REGISTRATION: true
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                ref: main
+                
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v2
+              with:
+                terraform_wrapper: false
+                
+            - name: Terraform Init - Prod
+              run: | 
+                cd /home/runner/work/azure-terraform/az-terraform/prod
+                terraform init -input=false
+                
+            # Generates execution plan
+            - name: Terraform Plan
+              run: |
+                cd /home/runner/work/azure-terraform/az-terraform/prod
+                terraform plan -out=prod-tfplan
+              continue-on-error: false
+    
+    # Test
+    tests:
+        name: Test IaC Code
+        runs-on: ubuntu-latest
+        needs: [terraform-plan-backend, terraform-plan-dev, terraform-plan-prod]
+        env:
+            ARM_SKIP_PROVIDER_REGISTRATION: true
+        steps:
+            - name: Tests
+              run: | 
+                  echo "Testing ..."

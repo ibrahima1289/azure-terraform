@@ -1,14 +1,14 @@
 # use case
 variable "infra" {
   type          = string
-  description   = "Use case name"
-  default       = "devinfra"
+  description   = "Prod Infra"
+  default       = "prod"
 }
 # environment
 variable "environment" {
   type          = string
-  description   = "Dev environment"
-  default       = "dev"
+  description   = "Prod environment"
+  default       = "prod"
 }
 # azure region
 variable "location" {
@@ -41,7 +41,7 @@ variable "account_tier" {
 }
 
 variable "account_replication_type" {
-  description = "Replication typr used."
+  description = "Replication type used."
   type        = string
   default     = "LRS"
 }

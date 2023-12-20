@@ -1,9 +1,9 @@
 ########################## Service Principal ##########################
 output "object_id" {
-  value       = azuread_service_principal.InfraSPN.object_id
+  value       = azuread_service_principal.prod_spn.object_id
 }
 output "client_id" {
-  value       = azuread_application.InfraSPN.application_id
+  value       = azuread_application.prod_spn.application_id
 }
 
 # output "sp-pass" {
@@ -14,11 +14,11 @@ output "client_id" {
 
 ########################## Storage Account ###########################
 output "terraform_state_resource_group_name" {
-  value = azurerm_resource_group.tfstate-rg.name
+  value = azurerm_resource_group.prod-state-rg.name
 }
 output "terraform_state_storage_account" {
-  value = azurerm_storage_account.tfstate-sa.name
+  value = azurerm_storage_account.prod-state-sa.name
 }
 output "terraform_state_storage_container" {
-  value = azurerm_storage_container.tf-container.name
+  value = azurerm_storage_container.prod-container.name
 }

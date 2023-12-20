@@ -1,0 +1,120 @@
+name: Create Environment
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to be Created'
+        type: choice
+        options:
+          - dev
+          - prod
+          - backend
+        default: backend
+        required: true
+        
+permissions:
+    contents: read
+    pull-requests: write
+
+jobs:
+  terraform-plan:
+        name: Terraforn Plan ${{ inputs.environment }}
+        runs-on: ubuntu-latest
+        env:
+          ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+          ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+        steps:
+          # Checkout main to GitHub Actions runner
+          - name: Checkout
+            uses: actions/checkout@v3
+            with:
+              ref: main
+          
+          # Displays checkout files in runner
+          - name: Display ${{ inputs.environment }} Folder
+            run: |
+              pwd
+              ls -altr /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
+    
+          # Install the latest version Terraform CLI
+          - name: Setup Terraform
+            uses: hashicorp/setup-terraform@v2
+            with:
+              terraform_wrapper: false
+    
+          # Environment 
+          - name: Terraform Init ${{ inputs.environment }}
+            run: | 
+              cd /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
+              terraform init -input=false
+
+          - name: Terraform Format ${{ inputs.environment }}
+            run: terraform fmt -check
+            
+          - name: Terraform Validate ${{ inputs.environment }}
+            run: terraform validate
+
+          - name: Terraform Plan ${{ inputs.environment }}
+            run: |
+                cd /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
+                terraform plan -out=${{ inputs.environment }}-tfplan
+            continue-on-error: false
+
+  approve-creation:
+    name: Approve ${{ inputs.environment }} Plan
+    runs-on: ubuntu-latest
+    needs: [terraform-plan]
+    environment:
+      name: release-approver
+    steps:
+      - name: Validate TF Plan
+        run: | 
+           echo "Plan Validation ..."
+  
+  terraform-apply:
+    name: Provision ${{ inputs.environment }} Environment
+    env:
+      ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+      ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+    runs-on: ubuntu-latest
+    environment: "${{ inputs.environment }}"
+    needs: [terraform-plan, approve-creation]
+
+    steps:
+      # Checkout main 
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      # Install Terraform CLI
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+
+      # Initialize load remote state
+      - name: Terraform Init-Apply - ${{ inputs.environment }}
+        run: | 
+            cd /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
+            terraform init -input=false
+            ls -altr /home/runner/work/aazure-terraform/az-terraform/${{ inputs.environment }}
+
+      # Generates execution plan
+      - name: Terraform Plan-Apply - ${{ inputs.environment }}
+        run: |
+            cd /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
+            terraform plan -out=${{ inputs.environment }}-create-tfplan
+            ls -altr /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
+        continue-on-error: false
+
+      # Provision Infrastructure
+      # - name: Terraform Apply - ${{ inputs.environment }}
+      #   run: |
+      #     cd /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
+      #     terraform apply -auto-approve "${{ inputs.environment }}-create-tfplan" 
+      #     ls -altr /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
