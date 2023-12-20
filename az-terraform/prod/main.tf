@@ -11,13 +11,13 @@ terraform {
     }
   }
 
-  backend "azurerm" {
-    subscription_id      = data.azurerm_subscription.current.id
-    resource_group_name  = "backend-state-rg"
-    storage_account_name = "backendtf..."
-    container_name       = "backend-tfstate"
-    key                  = "prod.tfstate"
-  }
+  # backend "azurerm" {
+  #   subscription_id      = data.azurerm_subscription.current.id
+  #   resource_group_name  = "backend-state-rg"
+  #   storage_account_name = "backendtf..."
+  #   container_name       = "backend-tfstate"
+  #   key                  = "prod.tfstate"
+  # }
 
   required_version = ">= 1.5.0"
 }
