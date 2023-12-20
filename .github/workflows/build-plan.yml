@@ -9,12 +9,6 @@ permissions:
     contents: read
     id-token: write
     pull-requests: write
-    
-env:
-  ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"  
-  ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
-  ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
-  ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
 
 jobs:
     build:
@@ -33,10 +27,7 @@ jobs:
           - name: Az CLI login
             uses: azure/login@v1
             with:
-              tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-              client-id: ${{ secrets.AZURE_CLIENT_ID }}
-              client-secret: ${{ secrets.AZURE_CLIENT_ID }}
-              subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+              creds: ${{ secrets.AZURE_CREDENTIALS}}
 
           - name: Test Azure CLI
             uses: azure/CLI@v1
