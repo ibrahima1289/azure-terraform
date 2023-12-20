@@ -22,7 +22,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
           ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
           ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
         steps:
@@ -36,7 +36,7 @@ jobs:
           - name: Display ${{ inputs.environment }} Folder
             run: |
               pwd
-              ls -altr /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
+              ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
     
           # Install the latest version Terraform CLI
           - name: Setup Terraform
@@ -47,7 +47,7 @@ jobs:
           # Environment 
           - name: Terraform Init ${{ inputs.environment }}
             run: | 
-              cd /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
+              cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
               terraform init -input=false
 
           - name: Terraform Format ${{ inputs.environment }}
@@ -58,7 +58,7 @@ jobs:
 
           - name: Terraform Plan ${{ inputs.environment }}
             run: |
-                cd /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
+                cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
                 terraform plan -destroy -out=${{ inputs.environment }}-destroy-tfplan
             continue-on-error: false
 
@@ -100,21 +100,21 @@ jobs:
       # Initialize load remote state
       - name: Terraform Init-Destroy - ${{ inputs.environment }}
         run: | 
-            cd /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
+            cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
             terraform init -input=false
-            ls -altr /home/runner/work/aazure-terraform/az-terraform/${{ inputs.environment }}
+            ls -altr /home/runner/work/aazure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
 
       # Generates execution plan
       - name: Terraform Plan-Destroy - ${{ inputs.environment }}
         run: |
-            cd /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
+            cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
             terraform plan -out=${{ inputs.environment }}-create-tfplan
-            ls -altr /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
+            ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
         continue-on-error: false
 
       # Provision Infrastructure
       # - name: Terraform Apply - ${{ inputs.environment }}
       #   run: |
-      #     cd /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
+      #     cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
       #     terraform apply -auto-approve "${{ inputs.environment }}-destroy-tfplan" 
-      #     ls -altr /home/runner/work/azure-terraform/az-terraform/${{ inputs.environment }}
+      #     ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}

@@ -10,10 +10,10 @@ permissions:
     pull-requests: write
     
 env:
-    ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
-    ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-    ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
-    ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+  ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"  
+  ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+  ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
+  ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
 
 jobs:
     build:
@@ -29,16 +29,31 @@ jobs:
             with:
               ref: main
           
+          - name: Az CLI login
+            uses: azure/login@v1
+            with:
+              tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+              client-id: ${{ secrets.AZURE_CLIENT_ID }}
+              subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+          - name: Test Azure CLI
+            uses: azure/CLI@v1
+            with:
+              azcliversion: latest
+              inlineScript: |
+                az account show
+                az group list
+
           # Displays checkout files in runner
           - name: Display Folders
             run: |
               pwd
               echo 'Backend folder'
-              ls -altr /home/runner/work/azure-terraform/az-terraform/backend
+              ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/backend
               echo 'Dev folder'
-              ls -altr /home/runner/work/azure-terraform/az-terraform/dev
+              ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/dev
               echo 'Prod folder'
-              ls -altr /home/runner/work/azure-terraform/az-terraform/prod
+              ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/prod
     
           # Install the latest version Terraform CLI
           - name: Setup Terraform
@@ -49,7 +64,7 @@ jobs:
           # Backend
           - name: Terraform Init - Backend
             run: | 
-              cd /home/runner/work/azure-terraform/az-terraform/backend
+              cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/backend
               terraform init -input=false
 
           - name: Terraform Format Backend
@@ -61,7 +76,7 @@ jobs:
           # Dev
           - name: Terraform Init - Dev
             run: | 
-                cd /home/runner/work/azure-terraform/az-terraform/dev
+                cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/dev
                 terraform init -input=false
       
           - name: Terraform Format Dev
@@ -73,7 +88,7 @@ jobs:
           # Prod
           - name: Terraform Init - Prod
             run: | 
-              cd /home/runner/work/azure-terraform/az-terraform/prod
+              cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/prod
               terraform init -input=false
     
           - name: Terraform Format Prod
@@ -103,12 +118,12 @@ jobs:
 
           - name: Terraform Init - Backend
             run: | 
-              cd /home/runner/work/azure-terraform/az-terraform/backend
+              cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/backend
               terraform init -input=false
 
           - name: Terraform Plan
             run: |
-                cd /home/runner/work/azure-terraform/az-terraform/backend
+                cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/backend
                 terraform plan -out=backend-tfplan
             continue-on-error: false
 
@@ -133,12 +148,12 @@ jobs:
         
             - name: Terraform Init - Dev
               run: | 
-                cd /home/runner/work/azure-terraform/az-terraform/dev
+                cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/dev
                 terraform init -input=false
         
             - name: Terraform Plan
               run: |
-                cd /home/runner/work/azure-terraform/az-terraform/dev
+                cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/dev
                 terraform plan -out=dev-tfplan
               continue-on-error: false
 
@@ -163,13 +178,13 @@ jobs:
                 
             - name: Terraform Init - Prod
               run: | 
-                cd /home/runner/work/azure-terraform/az-terraform/prod
+                cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/prod
                 terraform init -input=false
                 
             # Generates execution plan
             - name: Terraform Plan
               run: |
-                cd /home/runner/work/azure-terraform/az-terraform/prod
+                cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/prod
                 terraform plan -out=prod-tfplan
               continue-on-error: false
     
