@@ -1,3 +1,7 @@
+##################### Important ##############
+# Backend should be set only from local to preserve the state file
+# Otherwise, provide state file placehoder before deployinh backend resources
+
 # Configure the Azure provider
 terraform {
   required_providers {
