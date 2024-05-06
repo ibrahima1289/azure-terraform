@@ -14,11 +14,11 @@ resource "azuread_application" "spn_backend" {
 }
 
 # Assign role to the SPN
-# resource "azurerm_role_assignment" "spn_backend" {
-#   scope                        = data.azurerm_subscription.current.id # Add the subscription id
-#   role_definition_name         = "Contributor" 
-#   principal_id                 = azuread_service_principal.spn_backend.object_id # SPN id
-# }
+resource "azurerm_role_assignment" "spn_backend" {
+  scope                        = data.azurerm_subscription.current.id # Add the subscription id
+  role_definition_name         = "Contributor" 
+  principal_id                 = azuread_service_principal.spn_backend.object_id # SPN id
+}
 
 # Passwd + Rotation
 resource "time_rotating" "spn_backend" {
