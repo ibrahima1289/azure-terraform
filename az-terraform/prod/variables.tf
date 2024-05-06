@@ -1,26 +1,26 @@
 # use case
 variable "infra" {
-  type          = string
-  description   = "Prod Infra"
-  default       = "prod"
+  type        = string
+  description = "Prod Infra"
+  default     = "prod"
 }
 # environment
 variable "environment" {
-  type          = string
-  description   = "Prod environment"
-  default       = "prod"
+  type        = string
+  description = "Prod environment"
+  default     = "prod"
 }
 # azure region
 variable "location" {
-  type          = string
-  description   = "Azure region"
-  default       = "eastus"
+  type        = string
+  description = "Azure region"
+  default     = "eastus"
 }
 
 variable "name" {
-  description   = "Storage account name"
-  type          = string
-  default       = null
+  description = "Storage account name"
+  type        = string
+  default     = null
 }
 
 # variable "resource_group_name" {

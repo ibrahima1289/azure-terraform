@@ -10,7 +10,7 @@ resource "azuread_service_principal" "spn_backend" {
 # Create the Application
 resource "azuread_application" "spn_backend" {
   display_name = "app_backend"
-  owners                       = [data.azuread_client_config.current.object_id]
+  owners       = [data.azuread_client_config.current.object_id]
 }
 
 # Assign role to the SPN
@@ -31,8 +31,8 @@ resource "random_string" "sp-pass" {
 }
 
 resource "azuread_service_principal_password" "sp-pass" {
-  service_principal_id         = azuread_service_principal.spn_backend.object_id
-  rotate_when_changed          = {
-    rotation                   = time_rotating.spn_backend.id
+  service_principal_id = azuread_service_principal.spn_backend.object_id
+  rotate_when_changed = {
+    rotation = time_rotating.spn_backend.id
   }
 }

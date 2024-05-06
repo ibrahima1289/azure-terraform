@@ -1,26 +1,26 @@
 # use case
 variable "infra" {
-  type          = string
-  description   = "Backend Infra"
-  default       = "backend"
+  type        = string
+  description = "Backend Infra"
+  default     = "backend"
 }
 # environment
 variable "environment" {
-  type          = string
-  description   = "Backend Environment for TF state Files"
-  default       = "backend"
+  type        = string
+  description = "Backend Environment for TF state Files"
+  default     = "backend"
 }
 # azure region
 variable "location" {
-  type          = string
-  description   = "Azure region"
-  default       = "eastus"
+  type        = string
+  description = "Azure region"
+  default     = "eastus"
 }
 
 variable "name" {
-  description   = "Storage account name"
-  type          = string
-  default       = null
+  description = "Storage account name"
+  type        = string
+  default     = null
 }
 
 # variable "resource_group_name" {
