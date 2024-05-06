@@ -103,7 +103,7 @@ jobs:
         run: | 
             cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
             terraform init -input=false
-            ls -altr /home/runner/work/aazure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
+            ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
 
       # Generates execution plan
       - name: Terraform Plan-Apply - ${{ inputs.environment }}
