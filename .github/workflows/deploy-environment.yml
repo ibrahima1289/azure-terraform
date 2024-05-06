@@ -1,4 +1,5 @@
 name: Create Environment
+
 on:
   workflow_dispatch:
     inputs:
@@ -112,7 +113,7 @@ jobs:
             ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
         continue-on-error: false
 
-      Provision Infrastructure
+      # Provision Infrastructure
       - name: Terraform Apply - ${{ inputs.environment }}
         run: |
           cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
