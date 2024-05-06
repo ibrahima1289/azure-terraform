@@ -3,8 +3,8 @@ data "azuread_client_config" "current" {}
 # Create the Service Principle
 resource "azuread_service_principal" "spn_backend" {
   application_id               = azuread_application.spn_backend.application_id
-  app_role_assignment_required = true
   owners                       = [data.azuread_client_config.current.object_id]
+  app_role_assignment_required = true
 }
 
 # Create the Application

@@ -77,7 +77,7 @@ jobs:
     name: Destroy ${{ inputs.environment }} Environment
     env:
       ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
-      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
       ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
     runs-on: ubuntu-latest
@@ -112,9 +112,9 @@ jobs:
             ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
         continue-on-error: false
 
-      # Provision Infrastructure
-      # - name: Terraform Apply - ${{ inputs.environment }}
-      #   run: |
-      #     cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
-      #     terraform apply -auto-approve "${{ inputs.environment }}-destroy-tfplan" 
-      #     ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
+      Provision Infrastructure
+      - name: Terraform Apply - ${{ inputs.environment }}
+        run: |
+          cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
+          terraform apply -auto-approve "${{ inputs.environment }}-destroy-tfplan" 
+          ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
