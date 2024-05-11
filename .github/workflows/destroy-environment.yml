@@ -8,7 +8,6 @@ on:
         options:
           - dev
           - prod
-          - backend
         default: dev
         required: true
         

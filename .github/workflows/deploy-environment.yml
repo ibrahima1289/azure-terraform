@@ -9,8 +9,7 @@ on:
         options:
           - dev
           - prod
-          - backend
-        default: backend
+        default: dev
         required: true
         
 permissions:
