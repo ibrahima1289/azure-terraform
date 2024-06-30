@@ -30,7 +30,9 @@ resource "azurerm_storage_account" "dev-state-sa" {
   account_tier              = var.account_tier
   access_tier               = var.access_tier
   account_replication_type  = var.account_replication_type
+  min_tls_version           = "TLS1_2"
   enable_https_traffic_only = true
+  shared_access_key_enabled = true
   infrastructure_encryption_enabled = true
   depends_on                = [azurerm_resource_group.dev-state-rg]
 
@@ -38,14 +40,14 @@ resource "azurerm_storage_account" "dev-state-sa" {
   #     prevent_destroy = true
   #   } 
 
-  customer_managed_key {
-    user_assigned_identity_id = azurerm_user_assigned_identity.key_vault_crypto.id
-    key_vault_key_id          = azurerm_key_vault_key.dev-key.id
-  }
+  # customer_managed_key {
+  #   user_assigned_identity_id = azurerm_user_assigned_identity.key_vault_admin.id
+  #   key_vault_key_id          = azurerm_key_vault_key.dev-key.id
+  # }
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.key_vault_crypto.id]
+    identity_ids = [azurerm_user_assigned_identity.key_vault_admin.id]
   }
 
   tags = {
@@ -54,16 +56,10 @@ resource "azurerm_storage_account" "dev-state-sa" {
 }
 
 # Create Managed Identity that can access the key in AKV
-resource "azurerm_user_assigned_identity" "key_vault_crypto" {
+resource "azurerm_user_assigned_identity" "key_vault_admin" {
   location            = var.location
   name                = "${lower(var.infra)}-akv-mi"
   resource_group_name = azurerm_resource_group.dev-state-rg.name
-}
-
-resource "azurerm_role_assignment" "key_vault_crypto" {
-  scope                = azurerm_key_vault.dev-akv.id
-  role_definition_name = "Key Vault Crypto User"
-  principal_id         = azurerm_user_assigned_identity.key_vault_crypto.principal_id
 }
 
 # Create a Container for the State File
