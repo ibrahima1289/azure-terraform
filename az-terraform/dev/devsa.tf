@@ -23,18 +23,18 @@ resource "azurerm_virtual_network" "dev-vnet" {
 
 # Create a Dev Storage Account 
 resource "azurerm_storage_account" "dev-state-sa" {
-  name                      = "${lower(var.infra)}tf${random_string.sa-name.result}"
-  resource_group_name       = azurerm_resource_group.dev-state-rg.name
-  location                  = var.location
-  account_kind              = var.account_kind
-  account_tier              = var.account_tier
-  access_tier               = var.access_tier
-  account_replication_type  = var.account_replication_type
-  min_tls_version           = "TLS1_2"
-  enable_https_traffic_only = true
-  shared_access_key_enabled = true
+  name                              = "${lower(var.infra)}tf${random_string.sa-name.result}"
+  resource_group_name               = azurerm_resource_group.dev-state-rg.name
+  location                          = var.location
+  account_kind                      = var.account_kind
+  account_tier                      = var.account_tier
+  access_tier                       = var.access_tier
+  account_replication_type          = var.account_replication_type
+  min_tls_version                   = "TLS1_2"
+  enable_https_traffic_only         = true
+  shared_access_key_enabled         = true
   infrastructure_encryption_enabled = true
-  depends_on                = [azurerm_resource_group.dev-state-rg]
+  depends_on                        = [azurerm_resource_group.dev-state-rg]
 
   #   lifecycle {
   #     prevent_destroy = true

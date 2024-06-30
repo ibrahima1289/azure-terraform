@@ -20,8 +20,8 @@ resource "azurerm_key_vault" "dev-akv" {
   sku_name            = var.sku_name
 
   # purge_protection_enabled = false
-  enable_rbac_authorization       = true
-  purge_protection_enabled = true
+  enable_rbac_authorization  = true
+  purge_protection_enabled   = true
   soft_delete_retention_days = 7
 }
 
@@ -52,12 +52,12 @@ resource "azurerm_key_vault_access_policy" "storage_mi_kv_access" {
 # }
 
 resource "azurerm_key_vault_key" "dev-key" {
-  name            = "${lower(var.infra)}-key-${random_string.akv-name.result}"
+  name = "${lower(var.infra)}-key-${random_string.akv-name.result}"
   # name            = "${lower(var.infra)}-key-${formatdate("YYYYMMDD-hhmm", timestamp())}"
-  key_vault_id    = azurerm_key_vault.dev-akv.id
-  key_type        = var.key_type
-  key_size        = var.key_size
-  key_opts        = var.key_ops
+  key_vault_id = azurerm_key_vault.dev-akv.id
+  key_type     = var.key_type
+  key_size     = var.key_size
+  key_opts     = var.key_ops
   # expiration_date = time_offset.offset
   expiration_date = time_offset.offset.rfc3339
 
