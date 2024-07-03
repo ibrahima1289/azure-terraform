@@ -17,3 +17,6 @@ tfplan
 
 #terraform init files 
 **/.terraform
+.git/
+../
+./
