@@ -30,7 +30,7 @@ jobs:
           - name: Checkout
             uses: actions/checkout@v3
             with:
-              ref: main
+              ref: 'refs/heads/main'
           
           # Displays checkout files in runner
           - name: Display ${{ inputs.environment }} Folder
@@ -60,6 +60,7 @@ jobs:
             run: |
                 cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
                 terraform plan -out=${{ inputs.environment }}-tfplan
+            if: ref == 'refs/heads/main'
             continue-on-error: false
 
   approve-creation:
@@ -89,7 +90,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: main
+          ref: 'refs/heads/main'
 
       # Install Terraform CLI
       - name: Setup Terraform
@@ -110,6 +111,7 @@ jobs:
             cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
             terraform plan -out=${{ inputs.environment }}-create-tfplan
             ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
+        if: ref == 'refs/heads/main'
         continue-on-error: false
 
       # Provision Infrastructure
@@ -118,3 +120,4 @@ jobs:
           cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
           terraform apply -auto-approve "${{ inputs.environment }}-create-tfplan" 
           ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
+        if: ref == 'refs/heads/main'  
