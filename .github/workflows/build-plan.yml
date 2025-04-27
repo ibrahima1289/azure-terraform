@@ -46,8 +46,6 @@ jobs:
               ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/dev
               echo 'Prod folder'
               ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/prod
-            if: ref == 'refs/heads/main'
-            continue-on-error: false
     
           # Install the latest version Terraform CLI
           - name: Setup Terraform
