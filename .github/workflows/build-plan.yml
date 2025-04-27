@@ -122,6 +122,7 @@ jobs:
             run: |
                 cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/backend
                 terraform plan -out=backend-tfplan
+                ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/backend
             if: github.ref == 'refs/heads/main'
             continue-on-error: false
 
@@ -156,6 +157,7 @@ jobs:
               run: |
                 cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/dev
                 terraform plan -out=dev-tfplan
+                ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/dev
               if: github.ref == 'refs/heads/main'
               continue-on-error: false
 
@@ -191,6 +193,7 @@ jobs:
               run: |
                 cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/prod
                 terraform plan -out=prod-tfplan
+                ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/prod
               if: github.ref == 'refs/heads/main'
               continue-on-error: false
     
@@ -204,7 +207,15 @@ jobs:
         steps:
             - name: Tests
               run: | 
-                  echo "Testing ..."
+                  echo "List State files ..."
+                  cd /home/runner/work/azure-terraform/azure-terraform/az-terraform
+                  echo 'List Backend State Files'
+                  ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/backend
+                  echo 'List Dev State Files'
+                  ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/dev
+                  echo 'List Prod State Files'
+                  ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/prod
+              continue-on-error: true
     
     # Cleanup
     cleanup:
@@ -214,20 +225,10 @@ jobs:
       steps:
         - name: List Files
           run: |
-            echo 'folder 1'
+            echo 'List Existing Folders'
             ls -altr /home/runner/work
-            echo 'Folder 2'
-            ls -altr /home/runner/work/azure-terraform
-            echo 'Folder 3'
-            ls -altr /home/runner/work/azure-terraform/azure-terraform
-            echo 'Backend folder'
-            ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/backend
-            echo 'Dev folder'
-            ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/dev
-            echo 'Prod folder'
-            ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/prod
 
-        # - name: Remove Files
-        #   run: |
-        #     cd /home/runner/work
-        #     rm -rf azure-terraform
+        - name: Remove Cloned Folder
+          run: |
+            cd /home/runner/work
+            rm -rf azure-terraform
