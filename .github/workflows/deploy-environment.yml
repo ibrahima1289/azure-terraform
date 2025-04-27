@@ -60,7 +60,7 @@ jobs:
             run: |
                 cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
                 terraform plan -out=${{ inputs.environment }}-tfplan
-            if: ref == 'refs/heads/main'
+            if: github.ref == 'refs/heads/main'
             continue-on-error: false
 
   approve-creation:
@@ -111,7 +111,7 @@ jobs:
             cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
             terraform plan -out=${{ inputs.environment }}-create-tfplan
             ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
-        if: ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         continue-on-error: false
 
       # Provision Infrastructure
@@ -120,4 +120,4 @@ jobs:
           cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
           terraform apply -auto-approve "${{ inputs.environment }}-create-tfplan" 
           ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/${{ inputs.environment }}
-        if: ref == 'refs/heads/main'  
+        if: github.ref == 'refs/heads/main'  

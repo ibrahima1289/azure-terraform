@@ -46,6 +46,8 @@ jobs:
               ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/dev
               echo 'Prod folder'
               ls -altr /home/runner/work/azure-terraform/azure-terraform/az-terraform/prod
+            if: github.ref == 'refs/heads/main'
+            continue-on-error: false
     
           # Install the latest version Terraform CLI
           - name: Setup Terraform
@@ -120,7 +122,7 @@ jobs:
             run: |
                 cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/backend
                 terraform plan -out=backend-tfplan
-            if: ref == 'refs/heads/main'
+            if: github.ref == 'refs/heads/main'
             continue-on-error: false
 
     # Dev TF Plan
@@ -154,7 +156,7 @@ jobs:
               run: |
                 cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/dev
                 terraform plan -out=dev-tfplan
-              if: ref == 'refs/heads/main'
+              if: github.ref == 'refs/heads/main'
               continue-on-error: false
 
     # Prod TF Plan
@@ -189,7 +191,7 @@ jobs:
               run: |
                 cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/prod
                 terraform plan -out=prod-tfplan
-              if: ref == 'refs/heads/main'
+              if: github.ref == 'refs/heads/main'
               continue-on-error: false
     
     # Test
