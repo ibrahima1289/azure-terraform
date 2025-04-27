@@ -214,15 +214,15 @@ jobs:
       steps:
         - name: Remove Backend State Files
           run: |
-          cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/backend
-          rm -f *.tfstate *.tfstate.backup
+            cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/backend
+            rm -f *.tfstate *.tfstate.backup
 
         - name: Remove Dev State Files
           run: |
-          cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/dev
-          rm -f *.tfstate *.tfstate.backup
+            cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/dev
+            rm -f *.tfstate *.tfstate.backup
 
         - name: Remove Prod State Files
           run: |
-          cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/prod
-          rm -f *.tfstate *.tfstate.backup
+            cd /home/runner/work/azure-terraform/azure-terraform/az-terraform/prod
+            rm -f *.tfstate *.tfstate.backup
