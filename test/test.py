@@ -24,6 +24,6 @@ if __name__ == "__main__":
   
   print("Validating all Terraform files in the directory...")
   print("----  ----  ----  ----")   
-  terraform_directory = "/home/abe/github-repos/azure-terraform/az-terraform/prod"  
+  terraform_directory = "/home/runner/work/azure-terraform/azure-terraform/az-terraform"  
   validate_hcl_in_directory(terraform_directory)
   print("----  ----  ----  ----")
