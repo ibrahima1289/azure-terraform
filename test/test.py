@@ -23,7 +23,15 @@ def validate_hcl_in_directory(directory_path):
 if __name__ == "__main__":
   
   print("Validating all Terraform files in the directory...")
-  print("----  ----  ----  ----")   
-  terraform_directory = "/home/runner/work/azure-terraform/azure-terraform/az-terraform"  
-  validate_hcl_in_directory(terraform_directory)
+  print("----  ---- DEV  ----  ----")   
+  terraform_directory_dev = "/home/runner/work/azure-terraform/azure-terraform/az-terraform/dev"  
+  validate_hcl_in_directory(terraform_directory_dev)
+  print("----  ----  ----  ----")
+  print("----  ---- PROD ----  ----")   
+  terraform_directory_prod = "/home/runner/work/azure-terraform/azure-terraform/az-terraform/prod"  
+  validate_hcl_in_directory(terraform_directory_prod)
+  print("----  ----  ----  ----")
+  print("----  ---- BACKEND ----  ----")   
+  terraform_directory_backend = "/home/runner/work/azure-terraform/azure-terraform/az-terraform/backend"  
+  validate_hcl_in_directory(terraform_directory_backend)
   print("----  ----  ----  ----")
