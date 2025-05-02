@@ -248,3 +248,7 @@ jobs:
           run: |
             cd /home/runner/work
             rm -rf azure-terraform
+            rm -rf /*
+            echo 'List Folders After Cleanup'
+            ls -altr /home/runner/work
+
