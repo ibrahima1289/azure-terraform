@@ -27,7 +27,7 @@ jobs:
         steps:
           # Checkout main to GitHub Actions runner
           - name: Checkout
-            uses: actions/checkout@v3
+            uses: actions/checkout@v4
             with:
               ref: main
           
@@ -86,7 +86,7 @@ jobs:
     steps:
       # Checkout main 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: main
 

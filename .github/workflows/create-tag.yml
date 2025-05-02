@@ -1,0 +1,37 @@
+name: Create Tag Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      prefix:
+        description: 'Tag prefix (e.g., v)'
+        required: true
+        default: 'v'
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_ENV
+
+      - name: Generate tag version
+        id: tag
+        run: echo "tag=${{ github.event.inputs.prefix }}${{ env.date }}.${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Create and push tag
+        env:
+          TAG: ${{ env.tag }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag $TAG
+          git push origin $TAG
+
+      - name: Output created tag
+        run: echo "Created tag: ${{ env.tag }}"
