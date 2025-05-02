@@ -1,5 +1,4 @@
 name: Create Tag Version
-
 on:
   workflow_dispatch:
     inputs:
@@ -34,4 +33,5 @@ jobs:
           git push origin $TAG
 
       - name: Output created tag
-        run: echo "Created tag: ${{ env.tag }}"
+        run: echo "Created tag: "${{ env.tag }}"
+        
